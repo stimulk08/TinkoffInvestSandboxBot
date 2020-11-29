@@ -10,15 +10,16 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Collections;
 import java.util.List;
+import wrappers.WrappedUpdate;
 
 public class SearchAssetHandler implements Handler {
     @Override
-    public List<BotApiMethod> handleMessage(User user, Message message) {
+    public List<BotApiMethod> handleMessage(User user, WrappedUpdate message) {
         return Collections.emptyList();
     }
 
     @Override
-    public List<BotApiMethod> handleCallbackQuery(User user, CallbackQuery callbackQuery) {
+    public List<BotApiMethod> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
         return Collections.emptyList();
     }
 

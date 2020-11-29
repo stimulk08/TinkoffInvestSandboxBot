@@ -5,11 +5,12 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.List;
+import wrappers.WrappedUpdate;
 
 public interface Handler {
-    List<BotApiMethod> handleMessage(User user, Message message);
+    List<BotApiMethod> handleMessage(User user, WrappedUpdate message);
 
-    List<BotApiMethod> handleCallbackQuery(User user, CallbackQuery callbackQuery);
+    List<BotApiMethod> handleCallbackQuery(User user, WrappedUpdate callbackQuery);
 
     State handledState();
 

@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import wrappers.WrappedUpdate;
 
 public class ChoosePortfolioHandler implements Handler {
     public static final String CREATE_NEW_PORTFOLIO = "/create_new";
@@ -26,13 +27,13 @@ public class ChoosePortfolioHandler implements Handler {
     private static final BigDecimal addUSDStep = new BigDecimal(50);
 
     @Override
-    public List<BotApiMethod> handleMessage(User user, Message message) {
+    public List<BotApiMethod> handleMessage(User user, WrappedUpdate message) {
         return Collections.emptyList();
     }
 
     @Override
-    public List<BotApiMethod> handleCallbackQuery(User user, CallbackQuery callbackQuery) {
-        String command = callbackQuery.getData();
+    public List<BotApiMethod> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
+        String command = callbackQuery.getMessageData();
         List<BotApiMethod> messages = new ArrayList<>();
 
         //TODO: replace with HashMap
@@ -41,7 +42,7 @@ public class ChoosePortfolioHandler implements Handler {
         } else if (command.equalsIgnoreCase(CREATE_NEW_PORTFOLIO))
             messages = handleCreateNewPortfolio(user);
         else if (command.equalsIgnoreCase(USD))
-            messages = handleAddCurrency(user, callbackQuery.getMessage());
+            messages = handleAddCurrency(user, callbackQuery);
         else if (command.equalsIgnoreCase(ACCEPT))
             messages = handleAccept(user);
 
@@ -67,14 +68,12 @@ public class ChoosePortfolioHandler implements Handler {
         return messages;
     }
 
-    private List<BotApiMethod> handleAddCurrency(User user, Message message) {
+    private List<BotApiMethod> handleAddCurrency(User user, WrappedUpdate message) {
         user.increaseUSDAmount(addUSDStep);
 
         String text = String.format("Количество валюты обновлено \nUSD: %s\n\n" +
                         "Добавьте валюту или подтвердите создание портфеля",
                 user.getStartUSDAmount());
-        //git push -u origin keyboard-extension
-        //git merge keyboard-extension
         return List.of(new EditMessageText()
                 .setChatId(user.getChatId())
                 .setMessageId(message.getMessageId())

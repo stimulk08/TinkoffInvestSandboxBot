@@ -5,21 +5,21 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import wrappers.WrappedUpdate;
 
 import static org.mockito.Mockito.*;
 
 
 public class HandlersTest {
     private final User user = mock(User.class);
-    private final Message message = mock(Message.class);
+    private final WrappedUpdate message = mock(WrappedUpdate.class);
     @Test
     public void test_ChoosePortfolioHandler_handleUSDCommand() {
         ChoosePortfolioHandler handler = new ChoosePortfolioHandler();
         when(message.getChatId()).thenReturn(Long.valueOf(0));
 
-        CallbackQuery callbackQuery = mock(CallbackQuery.class);
-        when(callbackQuery.getData()).thenReturn("/USD");
-        when(callbackQuery.getMessage()).thenReturn(message);
+        WrappedUpdate callbackQuery = mock(WrappedUpdate.class);
+        when(callbackQuery.getMessageData()).thenReturn("/USD");
 
         handler.handleCallbackQuery(user, callbackQuery);
 

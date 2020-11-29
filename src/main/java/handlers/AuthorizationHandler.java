@@ -24,21 +24,24 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import wrappers.WrappedUpdate;
 
 public class AuthorizationHandler implements Handler {
     @Override
-    public List<BotApiMethod> handleMessage(User user, Message message) {
-        String text = message.getText();
+    public List<BotApiMethod> handleMessage(User user, WrappedUpdate message) {
+        String text = message.getMessageData();
         final Logger logger;
         try {
             logger = initLogger();
         } catch (IOException ex) {
-            System.err.println("При инициализации логгера произошла ошибка: " + ex.getLocalizedMessage());
+            System.err.println("При инициализации логгера произошла ошибка: "
+                    + ex.getLocalizedMessage());
             return Collections.emptyList();
         }
 
         OkHttpOpenApiFactory factory = new OkHttpOpenApiFactory(text, logger);
-        SandboxOpenApi api = factory.createSandboxOpenApiClient(Executors.newSingleThreadExecutor());
+        SandboxOpenApi api = factory.createSandboxOpenApiClient(
+                Executors.newSingleThreadExecutor());
 
         boolean isValidToken = checkTokenValidity(api);
         List<BotApiMethod> messages = addAuthorisationResultMessages(
@@ -54,7 +57,7 @@ public class AuthorizationHandler implements Handler {
     }
 
     @Override
-    public List<BotApiMethod> handleCallbackQuery(User user, CallbackQuery callbackQuery) {
+    public List<BotApiMethod> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
         return Collections.emptyList();
     }
 

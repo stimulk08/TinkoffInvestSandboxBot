@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import wrappers.WrappedUpdate;
 
 public class MainMenuHandler implements Handler {
     public static final String SHOW_PORTFOLIO = "/show";
@@ -30,8 +31,8 @@ public class MainMenuHandler implements Handler {
     }
 
     @Override
-    public List<BotApiMethod> handleMessage(User user, Message message) {
-        String text = message.getText();
+    public List<BotApiMethod> handleMessage(User user, WrappedUpdate message) {
+        String text = message.getMessageData();
         List<BotApiMethod> messages = new ArrayList<>();
 
         if (replyButtonsToCommands.containsKey(text)) {
@@ -49,7 +50,7 @@ public class MainMenuHandler implements Handler {
     }
 
     @Override
-    public List<BotApiMethod> handleCallbackQuery(User user, CallbackQuery callbackQuery) {
+    public List<BotApiMethod> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
         return Collections.emptyList();
     }
 

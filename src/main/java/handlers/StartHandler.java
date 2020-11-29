@@ -11,10 +11,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 
 import java.util.Collections;
 import java.util.List;
+import wrappers.WrappedUpdate;
 
 public class StartHandler implements Handler {
     @Override
-    public List<BotApiMethod> handleMessage(User user, Message message) {
+    public List<BotApiMethod> handleMessage(User user, WrappedUpdate message) {
         String startText = "*Привет! Я InvestBot*\n" +
                 "Я помогу тебе улучшить твои навыки в инвестировании и трейдинге" +
                 "Для начала введи свой api-ключ для Tinkoff песочницы.\n" +
@@ -30,7 +31,7 @@ public class StartHandler implements Handler {
     }
 
     @Override
-    public List<BotApiMethod> handleCallbackQuery(User user, CallbackQuery callbackQuery) {
+    public List<BotApiMethod> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
         return Collections.emptyList();
     }
 

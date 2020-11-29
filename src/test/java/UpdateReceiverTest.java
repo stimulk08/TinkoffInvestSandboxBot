@@ -12,13 +12,14 @@ import static org.mockito.Mockito.*;
 import java.io.*;
 import java.util.Collections;
 import java.util.List;
+import wrappers.WrappedUpdate;
 
 public class UpdateReceiverTest {
-    private final Update updateWithCallbackQuery = getUpdateByPathJson("UpdateWithCallbackQuery");
-    private final Update updateWithoutCallbackQuery = getUpdateByPathJson("UpdateWithoutCallbackQuery");
-    private final Update updateWithUnsupportedCommand = getUpdateByPathJson("UpdateWithUnsupportedCommand");
+    private final WrappedUpdate updateWithCallbackQuery = getUpdateByPathJson("UpdateWithCallbackQuery");
+    private final WrappedUpdate updateWithoutCallbackQuery = getUpdateByPathJson("UpdateWithoutCallbackQuery");
+    private final WrappedUpdate updateWithUnsupportedCommand = getUpdateByPathJson("UpdateWithUnsupportedCommand");
 
-    private Update getUpdateByPathJson(String path) {
+    private WrappedUpdate getUpdateByPathJson(String path) {
         File input = new File("src\\test\\resources\\"+ path + ".JSON");
         JsonElement fileElement = null;
         try {
@@ -35,7 +36,7 @@ public class UpdateReceiverTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return update;
+        return new WrappedUpdate(update);
     }
 
     @Test

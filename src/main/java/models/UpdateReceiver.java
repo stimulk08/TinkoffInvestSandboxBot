@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import wrappers.WrappedUpdate;
 
 public class UpdateReceiver {
     private final List<Handler> handlers;
@@ -43,12 +44,8 @@ public class UpdateReceiver {
         chatIdToUser = new ConcurrentHashMap<Long, User>();
     }
 
-    public List<BotApiMethod> handle(Update update) {
-        long chatId;
-        if (isUpdateWithText(update))
-            chatId = update.getMessage().getChatId();
-        else
-            chatId = update.getCallbackQuery().getFrom().getId();
+    public List<BotApiMethod> handle(WrappedUpdate update) {
+        long chatId = update.getChatId();
 
         if (!chatIdToUser.containsKey(chatId))
             chatIdToUser.put(chatId, new User(chatId));
@@ -59,15 +56,15 @@ public class UpdateReceiver {
             user.setState(State.NON_AUTHORIZED);
 
         try {
-            if (isUpdateWithText(update)) {
-                final Message message = update.getMessage();
-                if (message.getText().equals("/start") && !user.getState().equals(State.NONE))
+            if (!update.hasCallBackQuery() && update.getMessageData() != null) {
+                if (update.getMessageData().equals("/start")
+                        && !user.getState().equals(State.NONE))
                     user.setState(State.NONE);
-                return getHandlerByState(user.getState()).handleMessage(user, message);
-            } else if (update.hasCallbackQuery()) {
-                final CallbackQuery callbackQuery = update.getCallbackQuery();
-                return getHandlerByCallBackQuery(callbackQuery.getData())
-                        .handleCallbackQuery(user, callbackQuery);
+                return getHandlerByState(user.getState()).handleMessage(user, update);
+            }
+            if (update.hasCallBackQuery()) {
+                return getHandlerByCallBackQuery(update.getMessageData())
+                        .handleCallbackQuery(user, update);
             }
             throw new UnsupportedOperationException();
         } catch (UnsupportedOperationException e) {
@@ -91,14 +88,10 @@ public class UpdateReceiver {
                 .orElseThrow(UnsupportedOperationException::new);
     }
 
-    public static List<BotApiMethod> handleHelp(Update update) {
-        String chatId = update.getMessage().getChatId().toString();
+    public static List<BotApiMethod> handleHelp(WrappedUpdate update) {
+        String chatId = update.getChatId().toString();
         SendMessage helpMessage = new SendMessage(chatId, helpers);
         helpMessage.enableMarkdown(true);
         return List.of(helpMessage);
-    }
-
-    private boolean isUpdateWithText(Update update) {
-        return !update.hasCallbackQuery() && update.hasMessage() && update.getMessage().hasText();
     }
 }
