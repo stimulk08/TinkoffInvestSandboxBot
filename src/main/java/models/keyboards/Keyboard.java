@@ -2,6 +2,7 @@ package models.keyboards;
 
 import handlers.ChoosePortfolioHandler;
 
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
 
 public class Keyboard {
@@ -35,5 +36,10 @@ public class Keyboard {
 				ChoosePortfolioHandler.ACCEPT);
 		List<InlineButtonInfo> keyboardInfo = List.of(addUSDButtonInfo, acceptButtonInfo);
 		return new InlineKeyboard(List.of(keyboardInfo));
+	}
+
+	public static InlineKeyboard getToMenuKeyboard() {
+		//TODO
+		throw new NullPointerException();
 	}
 }

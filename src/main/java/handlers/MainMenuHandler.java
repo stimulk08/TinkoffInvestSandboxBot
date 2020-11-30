@@ -3,6 +3,7 @@ package handlers;
 import models.Handler;
 import models.State;
 import models.User;
+import models.keyboards.Keyboard;
 import ru.tinkoff.invest.openapi.SandboxOpenApi;
 import ru.tinkoff.invest.openapi.models.portfolio.Portfolio;
 
@@ -39,7 +40,7 @@ public class MainMenuHandler implements Handler {
 			if (command.equalsIgnoreCase(SHOW_PORTFOLIO)) {
 				messages = handleShow(user);
 			} else if (command.equalsIgnoreCase(FIND_ASSET)) {
-				throw new UnsupportedOperationException();
+				messages = handleFindAssets(user);
 			} else if (command.equalsIgnoreCase(RESET_PORTFOLIO)) {
 				throw new UnsupportedOperationException();
 			}
@@ -74,6 +75,14 @@ public class MainMenuHandler implements Handler {
 		messages.add(message);
 
 		return messages;
+	}
+
+	private List<Message> handleFindAssets(User user) {
+		user.setState(State.SEARCH_ASSET);
+		return Collections.emptyList();
+		// SEARCH HANDLER
+		//return List.of(new WrappedSendMessage(
+		//		user.getChatId(), "Выбирите тикер:", Keyboard.getToMenuKeyboard()));
 	}
 
 	@Override

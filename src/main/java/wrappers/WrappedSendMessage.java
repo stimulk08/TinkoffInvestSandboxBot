@@ -36,6 +36,10 @@ public class WrappedSendMessage implements Message {
 		keyboardType = KeyboardType.NONE;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+
 	public void setEnableMarkdown() {
 		enableMarkdown = true;
 	}
