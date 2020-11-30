@@ -3,45 +3,43 @@ package handlers;
 import models.Handler;
 import models.State;
 import models.User;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 
 import java.util.Collections;
 import java.util.List;
+import wrappers.Message;
+import wrappers.WrappedSendMessage;
 import wrappers.WrappedUpdate;
 
 public class StartHandler implements Handler {
-    @Override
-    public List<BotApiMethod> handleMessage(User user, WrappedUpdate message) {
-        String startText = "*Привет! Я InvestBot*\n" +
-                "Я помогу тебе улучшить твои навыки в инвестировании и трейдинге" +
-                "Для начала введи свой api-ключ для Tinkoff песочницы.\n" +
-                "Успехов! \n\n" +
-                "*Тут помощь* - /help";
-        SendMessage startMessage = new SendMessage(user.getChatId(), startText);
-        startMessage.setReplyMarkup(new ReplyKeyboardRemove());
-        startMessage.enableMarkdown(true);
-        SendMessage authMessage = new SendMessage(user.getChatId(), "Введите свой токен");
-        user.setState(State.NON_AUTHORIZED);
-        user.setLastQueryTime();
-        return List.of(startMessage, authMessage);
-    }
 
-    @Override
-    public List<BotApiMethod> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
-        return Collections.emptyList();
-    }
+	@Override
+	public List<Message> handleMessage(User user, WrappedUpdate message) {
+		String startText = "*Привет! Я InvestBot*\n" +
+				"Я помогу тебе улучшить твои навыки в инвестировании и трейдинге" +
+				"Для начала введи свой api-ключ для Tinkoff песочницы.\n" +
+				"Успехов! \n\n" +
+				"*Тут помощь* - /help";
+		WrappedSendMessage startMessage = new WrappedSendMessage(user.getChatId(), startText);
+		startMessage.setEnableMarkdown();
+		WrappedSendMessage authMessage = new WrappedSendMessage(
+				user.getChatId(), "Введите свой токен");
+		user.setState(State.NON_AUTHORIZED);
+		user.setLastQueryTime();
+		return List.of(startMessage, authMessage);
+	}
 
-    @Override
-    public State handledState() {
-        return State.NONE;
-    }
+	@Override
+	public List<Message> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
+		return Collections.emptyList();
+	}
 
-    @Override
-    public List<String> handledCallBackQuery() {
-        return Collections.emptyList();
-    }
+	@Override
+	public State handledState() {
+		return State.NONE;
+	}
+
+	@Override
+	public List<String> handledCallBackQuery() {
+		return Collections.emptyList();
+	}
 }

@@ -1,18 +1,16 @@
 package models;
 
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
-
 import java.util.List;
+import wrappers.Message;
 import wrappers.WrappedUpdate;
 
 public interface Handler {
-    List<BotApiMethod> handleMessage(User user, WrappedUpdate message);
 
-    List<BotApiMethod> handleCallbackQuery(User user, WrappedUpdate callbackQuery);
+	List<Message> handleMessage(User user, WrappedUpdate message);
 
-    State handledState();
+	List<Message> handleCallbackQuery(User user, WrappedUpdate callbackQuery);
 
-    List<String> handledCallBackQuery();
+	State handledState();
+
+	List<String> handledCallBackQuery();
 }

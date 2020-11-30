@@ -3,7 +3,8 @@ package wrappers;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class WrappedUpdate {
-	private Long chatId;
+
+	private long chatId;
 	private String messageData;
 	private Integer messageId;
 	private boolean hasCallBackQuery;
@@ -11,7 +12,7 @@ public class WrappedUpdate {
 	public WrappedUpdate(Update update) {
 		if (update.hasCallbackQuery()) {
 			hasCallBackQuery = true;
-			chatId = update.getCallbackQuery().getFrom().getId().longValue();
+			chatId = update.getCallbackQuery().getFrom().getId();
 			messageData = update.getCallbackQuery().getData();
 			messageId = update.getCallbackQuery().getMessage().getMessageId();
 		} else if (update.hasMessage() && update.getMessage().hasText()) {

@@ -1,9 +1,10 @@
 package models.tickers;
 
 public class AssetInfo {
-	private String fullName;
-	private String ticker;
-	private String figi;
+
+	private final String fullName;
+	private final String ticker;
+	private final String figi;
 
 	public AssetInfo(String fullName, String ticker, String figi) {
 		this.fullName = fullName;

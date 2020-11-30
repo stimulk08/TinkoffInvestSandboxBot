@@ -4,11 +4,6 @@ import models.Handler;
 import models.State;
 import models.User;
 import models.keyboards.Keyboard;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.tinkoff.invest.openapi.SandboxContext;
 import ru.tinkoff.invest.openapi.models.Currency;
 import ru.tinkoff.invest.openapi.models.sandbox.CurrencyBalance;
@@ -17,92 +12,93 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import wrappers.Message;
+import wrappers.WrappedEditMessage;
+import wrappers.WrappedSendMessage;
 import wrappers.WrappedUpdate;
 
 public class ChoosePortfolioHandler implements Handler {
-    public static final String CREATE_NEW_PORTFOLIO = "/create_new";
-    public static final String CONTINUE_WITH_OLD_PORTFOLIO = "/continue";
-    public static final String USD = "/USD";
-    public static final String ACCEPT = "/accept";
-    private static final BigDecimal addUSDStep = new BigDecimal(50);
 
-    @Override
-    public List<BotApiMethod> handleMessage(User user, WrappedUpdate message) {
-        return Collections.emptyList();
-    }
+	public static final String CREATE_NEW_PORTFOLIO = "/create_new";
+	public static final String CONTINUE_WITH_OLD_PORTFOLIO = "/continue";
+	public static final String USD = "/USD";
+	public static final String ACCEPT = "/accept";
+	private static final BigDecimal addUSDStep = new BigDecimal(50);
 
-    @Override
-    public List<BotApiMethod> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
-        String command = callbackQuery.getMessageData();
-        List<BotApiMethod> messages = new ArrayList<>();
+	@Override
+	public List<Message> handleMessage(User user, WrappedUpdate message) {
+		return Collections.emptyList();
+	}
 
-        //TODO: replace with HashMap
-        if (command.equalsIgnoreCase(CONTINUE_WITH_OLD_PORTFOLIO)) {
-            messages = handleContinue(user);
-        } else if (command.equalsIgnoreCase(CREATE_NEW_PORTFOLIO))
-            messages = handleCreateNewPortfolio(user);
-        else if (command.equalsIgnoreCase(USD))
-            messages = handleAddCurrency(user, callbackQuery);
-        else if (command.equalsIgnoreCase(ACCEPT))
-            messages = handleAccept(user);
+	@Override
+	public List<Message> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
+		String command = callbackQuery.getMessageData();
+		List<Message> messages = new ArrayList<>();
 
-        user.setLastQueryTime();
-        return messages;
-    }
+		//TODO: replace with HashMap
+		if (command.equalsIgnoreCase(CONTINUE_WITH_OLD_PORTFOLIO)) {
+			messages = handleContinue(user);
+		} else if (command.equalsIgnoreCase(CREATE_NEW_PORTFOLIO)) {
+			messages = handleCreateNewPortfolio(user);
+		} else if (command.equalsIgnoreCase(USD)) {
+			messages = handleAddCurrency(user, callbackQuery);
+		} else if (command.equalsIgnoreCase(ACCEPT)) {
+			messages = handleAccept(user);
+		}
 
-    private List<BotApiMethod> handleContinue(User user) {
-        List<BotApiMethod> messages = new ArrayList<>();
+		user.setLastQueryTime();
+		return messages;
+	}
 
-        messages.add(new SendMessage(user.getChatId(),
-                "Вы работаете со старым портфелем")
-                .setReplyMarkup(Keyboard.getMenuKeyboard()));
-        user.setState(State.MAIN_MENU);
-        return messages;
-    }
+	private List<Message> handleContinue(User user) {
+		List<Message> messages = new ArrayList<>();
 
-    private List<BotApiMethod> handleCreateNewPortfolio(User user) {
-        List<BotApiMethod> messages = new ArrayList<>();
-        messages.add(new SendMessage(user.getChatId(),
-                "Добавьте валюту или подтвердите создание портфеля")
-                .setReplyMarkup(Keyboard.getAddCurrencyKeyboard()));
-        return messages;
-    }
+		messages.add(new WrappedSendMessage(
+				user.getChatId(), "Вы работаете со старым портфелем",
+				Keyboard.getMenuKeyboard()));
+		user.setState(State.MAIN_MENU);
+		return messages;
+	}
 
-    private List<BotApiMethod> handleAddCurrency(User user, WrappedUpdate message) {
-        user.increaseUSDAmount(addUSDStep);
+	private List<Message> handleCreateNewPortfolio(User user) {
+		List<Message> messages = new ArrayList<>();
+		messages.add(new WrappedSendMessage(user.getChatId(),
+				"Добавьте валюту или подтвердите создание портфеля",
+				Keyboard.getAddCurrencyKeyboard()));
+		return messages;
+	}
 
-        String text = String.format("Количество валюты обновлено \nUSD: %s\n\n" +
-                        "Добавьте валюту или подтвердите создание портфеля",
-                user.getStartUSDAmount());
-        return List.of(new EditMessageText()
-                .setChatId(user.getChatId())
-                .setMessageId(message.getMessageId())
-                .setText(text)
-                .setReplyMarkup(Keyboard.getAddCurrencyKeyboard()));
-    }
+	private List<Message> handleAddCurrency(User user, WrappedUpdate message) {
+		user.increaseUSDAmount(addUSDStep);
 
-    private List<BotApiMethod> handleAccept(User user) {
-        CurrencyBalance currencyBalanceUSD = new CurrencyBalance(
-                Currency.USD, user.getStartUSDAmount());
+		String text = String.format("Количество валюты обновлено \nUSD: %s\n\n" +
+						"Добавьте валюту или подтвердите создание портфеля",
+				user.getStartUSDAmount());
+		return List.of(new WrappedEditMessage(
+				user.getChatId(), text, message.getMessageId(),
+				Keyboard.getAddCurrencyKeyboard()));
+	}
 
-        SandboxContext context = user.getApi().getSandboxContext();
-        context.clearAll(null).join();
-        context.setCurrencyBalance(currencyBalanceUSD, null).join();
+	private List<Message> handleAccept(User user) {
+		CurrencyBalance currencyBalanceUSD = new CurrencyBalance(
+				Currency.USD, user.getStartUSDAmount());
 
-        user.setState(State.MAIN_MENU);
-        return List.of(new SendMessage(user.getChatId(),
-                "Новый портфель успешно создан")
-                .setReplyMarkup(Keyboard.getMenuKeyboard()));
-    }
+		SandboxContext context = user.getApi().getSandboxContext();
+		context.clearAll(null).join();
+		context.setCurrencyBalance(currencyBalanceUSD, null).join();
 
+		user.setState(State.MAIN_MENU);
+		return List.of(new WrappedSendMessage(user.getChatId(),
+				"Новый портфель успешно создан", Keyboard.getMenuKeyboard()));
+	}
 
-    @Override
-    public State handledState() {
-        return State.CHOOSE_PORTFOLIO;
-    }
+	@Override
+	public State handledState() {
+		return State.CHOOSE_PORTFOLIO;
+	}
 
-    @Override
-    public List<String> handledCallBackQuery() {
-        return List.of(CONTINUE_WITH_OLD_PORTFOLIO, CREATE_NEW_PORTFOLIO, USD, ACCEPT);
-    }
+	@Override
+	public List<String> handledCallBackQuery() {
+		return List.of(CONTINUE_WITH_OLD_PORTFOLIO, CREATE_NEW_PORTFOLIO, USD, ACCEPT);
+	}
 }

@@ -6,51 +6,52 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class User {
-    private final long chatId;
-    private State state;
-    private long lastQueryTime;
-    private SandboxOpenApi api;
-    private BigDecimal startUSDAmount = new BigDecimal(0);
 
-    public User(long chatId) {
-        this.chatId = chatId;
-        this.state = State.NONE;
-        setLastQueryTime();
-    }
+	private final long chatId;
+	private State state;
+	private long lastQueryTime;
+	private SandboxOpenApi api;
+	private BigDecimal startUSDAmount = new BigDecimal(0);
 
-    public void setApi(SandboxOpenApi api) {
-        this.api = api;
-    }
+	public User(long chatId) {
+		this.chatId = chatId;
+		this.state = State.NONE;
+		setLastQueryTime();
+	}
 
-    public SandboxOpenApi getApi() {
-        return this.api;
-    }
+	public void setApi(SandboxOpenApi api) {
+		this.api = api;
+	}
 
-    public long getChatId() {
-        return chatId;
-    }
+	public SandboxOpenApi getApi() {
+		return this.api;
+	}
 
-    public State getState() {
-        return state;
-    }
+	public long getChatId() {
+		return chatId;
+	}
 
-    public void setState(State state) {
-        this.state = state;
-    }
+	public State getState() {
+		return state;
+	}
 
-    public void setLastQueryTime() {
-        this.lastQueryTime = new Date().getTime();
-    }
+	public void setState(State state) {
+		this.state = state;
+	}
 
-    public long getLastQueryTime() {
-        return this.lastQueryTime;
-    }
+	public void setLastQueryTime() {
+		this.lastQueryTime = new Date().getTime();
+	}
 
-    public void increaseUSDAmount(BigDecimal addingValue) {
-        startUSDAmount = startUSDAmount.add(addingValue);
-    }
+	public long getLastQueryTime() {
+		return this.lastQueryTime;
+	}
 
-    public BigDecimal getStartUSDAmount() {
-        return startUSDAmount;
-    }
+	public void increaseUSDAmount(BigDecimal addingValue) {
+		startUSDAmount = startUSDAmount.add(addingValue);
+	}
+
+	public BigDecimal getStartUSDAmount() {
+		return startUSDAmount;
+	}
 }

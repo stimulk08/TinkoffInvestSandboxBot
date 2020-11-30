@@ -4,10 +4,6 @@ import models.Handler;
 import models.State;
 import models.User;
 import models.keyboards.Keyboard;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.tinkoff.invest.openapi.SandboxOpenApi;
 import ru.tinkoff.invest.openapi.exceptions.WrongTokenException;
 import ru.tinkoff.invest.openapi.okhttp.OkHttpOpenApiFactory;
@@ -24,103 +20,107 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import wrappers.Message;
+import wrappers.WrappedSendMessage;
 import wrappers.WrappedUpdate;
 
 public class AuthorizationHandler implements Handler {
-    @Override
-    public List<BotApiMethod> handleMessage(User user, WrappedUpdate message) {
-        String text = message.getMessageData();
-        final Logger logger;
-        try {
-            logger = initLogger();
-        } catch (IOException ex) {
-            System.err.println("При инициализации логгера произошла ошибка: "
-                    + ex.getLocalizedMessage());
-            return Collections.emptyList();
-        }
 
-        OkHttpOpenApiFactory factory = new OkHttpOpenApiFactory(text, logger);
-        SandboxOpenApi api = factory.createSandboxOpenApiClient(
-                Executors.newSingleThreadExecutor());
+	@Override
+	public List<Message> handleMessage(User user, WrappedUpdate message) {
+		String text = message.getMessageData();
+		final Logger logger;
+		try {
+			logger = initLogger();
+		} catch (IOException ex) {
+			System.err.println("При инициализации логгера произошла ошибка: "
+					+ ex.getLocalizedMessage());
+			return Collections.emptyList();
+		}
 
-        boolean isValidToken = checkTokenValidity(api);
-        List<BotApiMethod> messages = addAuthorisationResultMessages(
-                user.getChatId(), isValidToken, text);
+		OkHttpOpenApiFactory factory = new OkHttpOpenApiFactory(text, logger);
+		SandboxOpenApi api = factory.createSandboxOpenApiClient(
+				Executors.newSingleThreadExecutor());
 
-        if (isValidToken) {
-            user.setApi(api);
-            user.setState(State.CHOOSE_PORTFOLIO);
-        }
+		boolean isValidToken = checkTokenValidity(api);
+		List<Message> messages = addAuthorisationResultMessages(
+				user.getChatId(), isValidToken, text);
 
-        user.setLastQueryTime();
-        return messages;
-    }
+		if (isValidToken) {
+			user.setApi(api);
+			user.setState(State.CHOOSE_PORTFOLIO);
+		}
 
-    @Override
-    public List<BotApiMethod> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
-        return Collections.emptyList();
-    }
+		user.setLastQueryTime();
+		return messages;
+	}
 
-    private List<BotApiMethod> addAuthorisationResultMessages(long chatId, boolean isAuth, String token) {
-        List<BotApiMethod> messages = new ArrayList<>();
+	@Override
+	public List<Message> handleCallbackQuery(User user, WrappedUpdate callbackQuery) {
+		return Collections.emptyList();
+	}
 
-        if (isAuth) {
-            messages.add(new SendMessage(chatId, "Успешная авторизация")
-                    .setReplyMarkup(Keyboard.getAuthKeyboard()));
-        } else {
-            messages.add(new SendMessage(chatId,
-                    String.format("Невалидный токен: %s\n", token)));
-            messages.add(new SendMessage(
-                    chatId, "Введите свой токен"));
-        }
-        return messages;
-    }
+	private List<Message> addAuthorisationResultMessages(long chatId, boolean isAuth,
+			String token) {
+		List<wrappers.Message> messages = new ArrayList<>();
+
+		if (isAuth) {
+			messages.add(new WrappedSendMessage(
+					chatId, "Успешная авторизация", Keyboard.getAuthKeyboard()));
+		} else {
+			messages.add(new WrappedSendMessage(
+					chatId, String.format("Невалидный токен: %s\n", token)));
+			messages.add(new WrappedSendMessage(chatId, "Введите свой токен"));
+		}
+		return messages;
+	}
 
 
-    private boolean checkTokenValidity(SandboxOpenApi api) {
-        boolean isValidToken = false;
-        try {
-            api.getSandboxContext().performRegistration(null).get();
-            isValidToken = true;
-        } catch (ExecutionException e) {
+	private boolean checkTokenValidity(SandboxOpenApi api) {
+		boolean isValidToken = false;
+		try {
+			api.getSandboxContext().performRegistration(null).get();
+			isValidToken = true;
+		} catch (ExecutionException e) {
             if (e.getCause() instanceof WrongTokenException) {
                 try {
                     api.close();
                 } catch (Exception ex) {
                     e.printStackTrace();
                 }
-            } else
+            } else {
                 e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return isValidToken;
-    }
-
-    private static Logger initLogger() throws IOException {
-        final LogManager logManager = LogManager.getLogManager();
-        final ClassLoader classLoader = AuthorizationHandler.class.getClassLoader();
-
-        try (final InputStream input = classLoader.getResourceAsStream("logging.properties")) {
-
-            if (input == null) {
-                throw new FileNotFoundException();
             }
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return isValidToken;
+	}
 
-            Files.createDirectories(Paths.get("./logs"));
-            logManager.readConfiguration(input);
-        }
+	private static Logger initLogger() throws IOException {
+		final LogManager logManager = LogManager.getLogManager();
+		final ClassLoader classLoader = AuthorizationHandler.class.getClassLoader();
 
-        return Logger.getLogger(AuthorizationHandler.class.getName());
-    }
+		try (final InputStream input = classLoader.getResourceAsStream("logging.properties")) {
 
-    @Override
-    public State handledState() {
-        return State.NON_AUTHORIZED;
-    }
+			if (input == null) {
+				throw new FileNotFoundException();
+			}
 
-    @Override
-    public List<String> handledCallBackQuery() {
-        return Collections.emptyList();
-    }
+			Files.createDirectories(Paths.get("./logs"));
+			logManager.readConfiguration(input);
+		}
+
+		return Logger.getLogger(AuthorizationHandler.class.getName());
+	}
+
+	@Override
+	public State handledState() {
+		return State.NON_AUTHORIZED;
+	}
+
+	@Override
+	public List<String> handledCallBackQuery() {
+		return Collections.emptyList();
+	}
 }
