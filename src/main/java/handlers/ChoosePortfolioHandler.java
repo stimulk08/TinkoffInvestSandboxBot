@@ -4,9 +4,6 @@ import models.Handler;
 import models.State;
 import models.User;
 import models.keyboards.Keyboard;
-import ru.tinkoff.invest.openapi.SandboxContext;
-import ru.tinkoff.invest.openapi.models.Currency;
-import ru.tinkoff.invest.openapi.models.sandbox.CurrencyBalance;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -73,19 +70,15 @@ public class ChoosePortfolioHandler implements Handler {
 
 		String text = String.format("Количество валюты обновлено \nUSD: %s\n\n" +
 						"Добавьте валюту или подтвердите создание портфеля",
-				user.getStartUSDAmount());
+				user.getUSDAmount());
 		return List.of(new WrappedEditMessage(
 				user.getChatId(), text, message.getMessageId(),
 				Keyboard.getAddCurrencyKeyboard()));
 	}
 
 	private List<Message> handleAccept(User user) {
-		CurrencyBalance currencyBalanceUSD = new CurrencyBalance(
-				Currency.USD, user.getStartUSDAmount());
-
-		SandboxContext context = user.getApi().getSandboxContext();
-		context.clearAll(null).join();
-		context.setCurrencyBalance(currencyBalanceUSD, null).join();
+		BigDecimal userBalanceUSD = user.getUSDAmount();
+		user.getApi().setBalanceUSD(userBalanceUSD);
 
 		user.setState(State.MAIN_MENU);
 		return List.of(new WrappedSendMessage(user.getChatId(),

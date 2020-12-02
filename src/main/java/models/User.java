@@ -1,6 +1,6 @@
 package models;
 
-import ru.tinkoff.invest.openapi.SandboxOpenApi;
+import wrappers.WrappedApi;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -10,7 +10,7 @@ public class User {
 	private final long chatId;
 	private State state;
 	private long lastQueryTime;
-	private SandboxOpenApi api;
+	private WrappedApi api;
 	private BigDecimal startUSDAmount = new BigDecimal(0);
 
 	public User(long chatId) {
@@ -19,11 +19,11 @@ public class User {
 		setLastQueryTime();
 	}
 
-	public void setApi(SandboxOpenApi api) {
+	public void setApi(WrappedApi api) {
 		this.api = api;
 	}
 
-	public SandboxOpenApi getApi() {
+	public WrappedApi getApi() {
 		return this.api;
 	}
 
@@ -51,7 +51,7 @@ public class User {
 		startUSDAmount = startUSDAmount.add(addingValue);
 	}
 
-	public BigDecimal getStartUSDAmount() {
+	public BigDecimal getUSDAmount() {
 		return startUSDAmount;
 	}
 }

@@ -25,9 +25,9 @@ public class ChoosePortfolioHandlerTests {
 	@Test
 	public void handleAddCurrency_ShouldIncreaseUSDAmount() {
 		when(update.getMessageData()).thenReturn(ChoosePortfolioHandler.USD);
-		BigDecimal amountBefore = user.getStartUSDAmount();
+		BigDecimal amountBefore = user.getUSDAmount();
 		handler.handleCallbackQuery(user, update);
-		Assert.assertNotSame(amountBefore, user.getStartUSDAmount());
+		Assert.assertNotSame(amountBefore, user.getUSDAmount());
 	}
 
 	@Test

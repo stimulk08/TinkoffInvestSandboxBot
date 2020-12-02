@@ -8,11 +8,13 @@ public class WrappedUpdate {
 	private String messageData;
 	private Integer messageId;
 	private boolean hasCallBackQuery;
+	private String messageText;
 
 	public WrappedUpdate(Update update) {
 		if (update.hasCallbackQuery()) {
 			hasCallBackQuery = true;
 			chatId = update.getCallbackQuery().getFrom().getId();
+			messageText = update.getCallbackQuery().getMessage().getText();
 			messageData = update.getCallbackQuery().getData();
 			messageId = update.getCallbackQuery().getMessage().getMessageId();
 		} else if (update.hasMessage() && update.getMessage().hasText()) {
@@ -35,5 +37,9 @@ public class WrappedUpdate {
 
 	public Long getChatId() {
 		return chatId;
+	}
+
+	public String getMessageText(){
+		return messageText;
 	}
 }

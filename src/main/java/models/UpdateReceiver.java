@@ -38,7 +38,7 @@ public class UpdateReceiver {
 
 	public UpdateReceiver(List<Handler> handlers) {
 		this.handlers = handlers;
-		chatIdToUser = new ConcurrentHashMap<Long, User>();
+		chatIdToUser = new ConcurrentHashMap<>();
 	}
 
 	public List<Message> handle(WrappedUpdate update) {
