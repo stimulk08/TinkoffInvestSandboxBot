@@ -39,7 +39,6 @@ public class WrappedApi {
         OkHttpOpenApiFactory factory = new OkHttpOpenApiFactory(token, logger);
         api = factory.createSandboxOpenApiClient(
                 Executors.newSingleThreadExecutor());
-
     }
 
     private void initLogger() {
@@ -120,10 +119,10 @@ public class WrappedApi {
                 .join();
     }
 
-    public InstrumentsList getInstrumentsByTicker(String ticker) {
+    public List<Instrument> getInstrumentsByTicker(String ticker) {
         return api
                 .getMarketContext()
-                .searchMarketInstrumentsByTicker(ticker).join();
+                .searchMarketInstrumentsByTicker(ticker).join().instruments;
     }
 
     public String getCurrencyByFigi(String figi) {

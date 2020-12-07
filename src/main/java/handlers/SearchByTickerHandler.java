@@ -14,7 +14,7 @@ import wrappers.WrappedUpdate;
 
 import java.util.*;
 
-public class SearchAssetHandler implements Handler {
+public class SearchByTickerHandler implements Handler {
     public static final String TO_MENU = "В главное меню";
     public final List<String> InstrumentFigies = Collections.synchronizedList(new ArrayList<>());
     private static final HashMap<String, String> replyButtonsToCommands =
@@ -26,6 +26,7 @@ public class SearchAssetHandler implements Handler {
 
     @Override
     public List<Message> handleMessage(User user, WrappedUpdate wrapper) {
+
         String text = wrapper.getMessageData();
         List<Message> messages;
 
@@ -45,11 +46,16 @@ public class SearchAssetHandler implements Handler {
     }
 
     private List<Message> handleSearchAsset(User user, String ticker) {
-        InstrumentsList instruments = user.getApi().getInstrumentsByTicker(ticker);
+        List<Instrument> instruments = user.getApi().getInstrumentsByTicker(ticker);
+        if(instruments.size() == 0){
+            return List.of(new WrappedSendMessage(
+                    user.getChatId(),
+                    "Инструмент не был найден\nПопробуйте ввести ещё раз"));
+        }
 
         List<List<InlineButtonInfo>> keyboardButtons = new ArrayList<>();
 
-        for (Instrument instr : instruments.instruments) {
+        for (Instrument instr : instruments) {
             keyboardButtons.add(List.of(new InlineButtonInfo(instr.name, instr.figi)));
             InstrumentFigies.add(instr.figi);
         }
@@ -70,7 +76,7 @@ public class SearchAssetHandler implements Handler {
 
     @Override
     public State handledState() {
-        return State.SEARCH_ASSET;
+        return State.SEARCH_BY_TICKER;
     }
 
     @Override

@@ -35,12 +35,16 @@ public class ChooseSearchModeHandler implements Handler {
 
         if (replyButtonsToCommands.containsKey(text)) {
             String command = replyButtonsToCommands.get(text);
-            if (command.equals(SEARCH_BY_TICKER)) {
-                messages = handleSearchByTicket(user);
-            } else if (command.equals(SEARCH_BY_LIST)) {
-                messages = handleSearchByList(user);
-            } else if (command.equals(TO_MENU)) {
-                messages = handleToMenu(user);
+            switch (command) {
+                case SEARCH_BY_TICKER:
+                    messages = handleSearchByTicket(user);
+                    break;
+                case SEARCH_BY_LIST:
+                    messages = handleSearchByList(user);
+                    break;
+                case TO_MENU:
+                    messages = handleToMenu(user);
+                    break;
             }
 
             user.setLastQueryTime();
@@ -50,7 +54,7 @@ public class ChooseSearchModeHandler implements Handler {
     }
 
     public List<Message> handleSearchByTicket(User user) {
-        user.setState(State.SEARCH_ASSET);
+        user.setState(State.SEARCH_BY_TICKER);
         WrappedSendMessage message = new WrappedSendMessage(
                 user.getChatId(),
                 "Введите тикер");
@@ -58,7 +62,7 @@ public class ChooseSearchModeHandler implements Handler {
     }
 
     public List<Message> handleSearchByList(User user) {
-        user.setState(State.SHOW_ASSET_LIST);
+        user.setState(State.SEARCH_BY_LIST);
         WrappedSendMessage message = new WrappedSendMessage(
                 user.getChatId(),
                 "Выберите тип ценных бумаг",

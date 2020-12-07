@@ -12,6 +12,8 @@ import static org.mockito.Mockito.*;
 import java.io.*;
 import java.util.Collections;
 import java.util.List;
+
+import wrappers.Message;
 import wrappers.WrappedUpdate;
 
 public class UpdateReceiverTest {
@@ -40,7 +42,7 @@ public class UpdateReceiverTest {
     }
 
     @Test
-    public void test_getHandlerByState_CallHandler() {
+    public void getHandlerByState_CallHandler() {
         Handler mock = mock(Handler.class);
         when(mock.handledState()).thenReturn(State.NONE);
         UpdateReceiver updateReceiver = new UpdateReceiver(List.of(mock));
@@ -51,7 +53,7 @@ public class UpdateReceiverTest {
     }
 
     @Test
-    public void test_getHandlerByCallBackQuery_CallHandler() {
+    public void getHandlerByCallBackQuery_CallHandler() {
         Handler mock = mock(Handler.class);
         when(mock.handledCallBackQuery()).thenReturn(List.of("/Command"));
         UpdateReceiver updateReceiver = new UpdateReceiver(List.of(mock));
@@ -62,12 +64,12 @@ public class UpdateReceiverTest {
     }
 
     @Test
-    public void test_getHandlerByCallBackQuery_ReturnEmptyCollection() {
+    public void getHandlerByCallBackQuery_ReturnEmptyCollection() {
         Handler mock = mock(Handler.class);
         when(mock.handledCallBackQuery()).thenReturn(List.of("/Command"));
         UpdateReceiver updateReceiver = new UpdateReceiver(List.of(mock));
 
-        List result = updateReceiver.handle(updateWithUnsupportedCommand);
+        List<Message> result = updateReceiver.handle(updateWithUnsupportedCommand);
 
         Assert.assertEquals(Collections.emptyList(), result);
     }

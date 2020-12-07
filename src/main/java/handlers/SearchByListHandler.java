@@ -17,7 +17,7 @@ import wrappers.WrappedUpdate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ShowAssetsListHandler implements Handler {
+public class SearchByListHandler implements Handler {
     private final AssetsCollector collector = new AssetsCollector();
     private final List<String> allFigies = collector.getAllFigies();
     private AssetPagesType pagesType = AssetPagesType.NONE;
@@ -45,10 +45,10 @@ public class ShowAssetsListHandler implements Handler {
             setCurrentPageNumber(user.getChatId(), 1);
             if (command.equalsIgnoreCase(RU)) {
                 pagesType = AssetPagesType.RU;
-                messages = handleShow(user, pagesType);
+                messages = handleSearch(user, pagesType);
             } else if (command.equalsIgnoreCase(FOREIGN)) {
                 pagesType = AssetPagesType.FOREIGN;
-                messages = handleShow(user, pagesType);
+                messages = handleSearch(user, pagesType);
             } else if (command.equalsIgnoreCase(TO_MENU))
                 messages = handleToMenu(user);
 
@@ -58,7 +58,7 @@ public class ShowAssetsListHandler implements Handler {
         return messages;
     }
 
-    private Integer getCurrentPageNumber(Long chatId) {
+    public Integer getCurrentPageNumber(Long chatId) {
         return chatIdToCurrentPage.get(chatId);
     }
 
@@ -66,7 +66,7 @@ public class ShowAssetsListHandler implements Handler {
         chatIdToCurrentPage.put(chatId, pageNumber);
     }
 
-    private List<Message> handleShow(User user, AssetPagesType type) {
+    private List<Message> handleSearch(User user, AssetPagesType type) {
         Integer currentPageNumber = getCurrentPageNumber(user.getChatId());
         List<AssetInfo> infoList = collector.getAssetsPageByNumber(currentPageNumber, type);
         InlineKeyboard keyboard = Keyboard.getKeyboardByAssetInfo(infoList, currentPageNumber);
@@ -150,7 +150,7 @@ public class ShowAssetsListHandler implements Handler {
 
     @Override
     public State handledState() {
-        return State.SHOW_ASSET_LIST;
+        return State.SEARCH_BY_LIST;
     }
 
     @Override

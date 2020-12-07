@@ -29,7 +29,7 @@ public class MainMenuHandlerTests {
 		WrappedSendMessage wrappedSendMessage = (WrappedSendMessage) handler.handleMessage(
 				user, update).get(0);
 		Assert.assertTrue(wrappedSendMessage.getMessage()
-				.contains("Введите тикер инструмента:"));
+				.contains("Выберите метод поиска актива"));
 	}
 
 	@Test

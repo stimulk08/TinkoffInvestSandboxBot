@@ -18,7 +18,7 @@ public class AssetsCollector {
 
     public AssetsCollector() {
         String systemToken = System.getenv("JAVA_TICKERS_TOKEN");
-        this.api = new WrappedApi(systemToken);
+        api = new WrappedApi(systemToken);
         ruAssetsPages = new AssetsPages();
         foreignAssetsPages = new AssetsPages();
         fillPages();
@@ -28,18 +28,20 @@ public class AssetsCollector {
         InstrumentsList listInstruments = api.getAllInstruments();
         List<Instrument> instruments = listInstruments.instruments;
         String currency;
+        AssetInfo assetInfo;
         for (Instrument asset : instruments) {
             allFigies.add(asset.figi);
             currency = asset.currency.name();
+            assetInfo = new AssetInfo(asset.name, asset.figi);
             if (currency.equals("RUB"))
-                ruAssetsPages.setAsset(asset);
+                ruAssetsPages.setAsset(assetInfo);
             else
-                foreignAssetsPages.setAsset(asset);
+                foreignAssetsPages.setAsset(assetInfo);
         }
     }
 
     public List<String> getAllFigies() {
-        return new ArrayList<>(allFigies);
+        return allFigies;
     }
 
     public List<AssetInfo> getAssetsPageByNumber(Integer number, AssetPagesType type) {

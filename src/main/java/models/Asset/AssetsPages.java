@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AssetsPages {
     private final ConcurrentHashMap<Integer, ArrayList<AssetInfo>> pages;
-    private static final Integer countRowsPerPage = 10;
+    public static final Integer countRowsPerPage = 10;
     public AssetsPages(){
         pages = new ConcurrentHashMap<>();
         pages.put(1, new ArrayList<>());
@@ -24,12 +24,13 @@ public class AssetsPages {
 
     public Integer getCountPages() {return pages.size();}
 
-    public void setAsset(Instrument asset){
+    public Integer getCountRowsPerPage(){return countRowsPerPage;}
+
+    public void setAsset(AssetInfo asset){
         Integer count = pages.size();
         Integer lastPageRowCount = getCountRowsPage(count);
         if (lastPageRowCount < countRowsPerPage) {
-            pages.get(count).add(new AssetInfo(
-                    asset.name, asset.figi));
+            pages.get(count).add(asset);
         }else if (lastPageRowCount.equals(countRowsPerPage)) {
             pages.put(count + 1, new ArrayList<>());
         }
