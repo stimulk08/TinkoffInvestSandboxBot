@@ -38,14 +38,14 @@ public class SearchByTickerHandlerTest {
     }
 
     @Test
-    public void handleCallbackQuery_ShouldChangeUserLastQueryTime() {
+    public void handleMessage_RequestIsValid_ShouldChangeUserLastQueryTime() {
         long queryTimeBefore = user.getLastQueryTime();
         handler.handleMessage(user, update);
         Assert.assertNotSame(queryTimeBefore, user.getLastQueryTime());
     }
 
     @Test
-    public void test2() {
+    public void handleMessage_TickerNotFound_shouldReturnRequireMessage() {
         WrappedSendMessage message = (WrappedSendMessage) handler.handleMessage(
                 user, update).get(0);
         Assert.assertTrue(message.getMessage()

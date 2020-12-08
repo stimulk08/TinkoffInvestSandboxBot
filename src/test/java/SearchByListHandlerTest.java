@@ -19,7 +19,7 @@ public class SearchByListHandlerTest {
         user = new User(0);
     }
     @Test
-    public void test1() {
+    public void handleMessage_HandleMoveNext_ShouldGoToNextPage() {
         when(update.getMessageData()).thenReturn("Отечественные");
         handler.handleMessage(user, update);
         when(update.getMessageData()).thenReturn(">");
@@ -31,7 +31,7 @@ public class SearchByListHandlerTest {
     }
 
     @Test
-    public void test2() {
+    public void handleMessage_HandleMoveBackOnFirstPage_ShouldNotMove() {
         when(update.getMessageData()).thenReturn("Отечественные");
         handler.handleMessage(user, update);
         when(update.getMessageData()).thenReturn("<");
@@ -43,17 +43,17 @@ public class SearchByListHandlerTest {
     }
 
     @Test
-    public void test3() {
+    public void handleMessage_HandleMoveNextAndBack_ShouldGoBack() {
         when(update.getMessageData()).thenReturn("Отечественные");
         handler.handleMessage(user, update);
         when(update.getMessageData()).thenReturn(">");
-        for(int i=0;i<2;i++)
-            handler.handleCallbackQuery(user, update);
+        handler.handleCallbackQuery(user, update);
+
         when(update.getMessageData()).thenReturn("<");
-        Integer expected = 2;
+        Integer expected = 1;
 
         handler.handleCallbackQuery(user, update);
 
-        Assert.assertEquals(expected, handler.getCurrentPageNumber((long) 0));
+        Assert.assertEquals(expected, handler.getCurrentPageNumber(user.getChatId()));
     }
 }

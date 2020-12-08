@@ -20,7 +20,7 @@ public class ChooseSearchModeHandlerTest {
     }
 
     @Test
-    public void test1(){
+    public void findByTicker_ShouldChangeUserState(){
         when(update.getMessageData()).thenReturn("Поиск актива по тикеру");
         State expected = State.SEARCH_BY_TICKER;
 
@@ -30,7 +30,7 @@ public class ChooseSearchModeHandlerTest {
     }
 
     @Test
-    public void test2(){
+    public void findByList_ShouldChangeUserState(){
         when(update.getMessageData()).thenReturn("Поиск по списку компаний");
         State expected = State.SEARCH_BY_LIST;
 
