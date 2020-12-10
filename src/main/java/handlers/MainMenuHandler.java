@@ -20,6 +20,7 @@ public class MainMenuHandler implements Handler {
     public static final String SHOW_PORTFOLIO = "/show";
     public static final String FIND_ASSET = "/find";
     public static final String RESET_PORTFOLIO = "/reset";
+    public static final String TAKE_QUIZ = "/start_quiz";
 
     private static final HashMap<String, String> replyButtonsToCommands =
             new HashMap<>();
@@ -28,6 +29,7 @@ public class MainMenuHandler implements Handler {
         replyButtonsToCommands.put("\uD83D\uDCBCПосмотреть портфель\uD83D\uDCBC", SHOW_PORTFOLIO);
         replyButtonsToCommands.put("❌Сбросить портфель❌", RESET_PORTFOLIO);
         replyButtonsToCommands.put("\uD83D\uDD0EНайти актив\uD83D\uDD0D", FIND_ASSET);
+        replyButtonsToCommands.put("✏Пройти тест✏", TAKE_QUIZ);
     }
 
     @Override
@@ -43,6 +45,8 @@ public class MainMenuHandler implements Handler {
                 messages = handleFindAssets(user);
             } else if (command.equalsIgnoreCase(RESET_PORTFOLIO)) {
                 throw new UnsupportedOperationException();
+            } else if (command.equalsIgnoreCase(TAKE_QUIZ)) {
+                messages = handleChooseTests(user);
             }
             user.setLastQueryTime();
         }
@@ -81,6 +85,15 @@ public class MainMenuHandler implements Handler {
                 user.getChatId(),
                 "Выберите метод поиска актива",
                 Keyboard.getChooseSearchModeKeyboard());
+        return List.of(message);
+    }
+
+    private List<Message> handleChooseTests(User user) {
+        user.setState(State.CHOOSE_TEST);
+        WrappedSendMessage message = new WrappedSendMessage(
+                user.getChatId(),
+                "Выберите номера теста",
+                Keyboard.getChooseTestKeyboard(user.getCompletedTests()));
         return List.of(message);
     }
 

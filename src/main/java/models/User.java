@@ -1,5 +1,7 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
 import wrappers.WrappedApi;
 
 import java.math.BigDecimal;
@@ -12,10 +14,13 @@ public class User {
 	private long lastQueryTime;
 	private WrappedApi api;
 	private BigDecimal startUSDAmount = new BigDecimal(0);
+	private List<Boolean> completedTests;
 
 	public User(long chatId) {
 		this.chatId = chatId;
 		this.state = State.NONE;
+		this.completedTests = new ArrayList<>();
+		// this.completedTests =
 		setLastQueryTime();
 	}
 
@@ -54,4 +59,6 @@ public class User {
 	public BigDecimal getUSDAmount() {
 		return startUSDAmount;
 	}
+
+	public List<Boolean> getCompletedTests() { return completedTests; }
 }

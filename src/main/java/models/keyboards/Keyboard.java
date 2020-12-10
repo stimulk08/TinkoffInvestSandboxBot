@@ -11,7 +11,8 @@ public class Keyboard {
 	public static SimpleKeyboard getMenuKeyboard() {
 		List<String> firstRow = List.of("\uD83D\uDCBCПосмотреть портфель\uD83D\uDCBC",
 				"❌Сбросить портфель❌");
-		List<String> secondRow = List.of("\uD83D\uDD0EНайти актив\uD83D\uDD0D");
+		List<String> secondRow = List.of("\uD83D\uDD0EНайти актив\uD83D\uDD0D",
+				"✏Пройти тест✏");
 		List<List<String>> rows = List.of(firstRow, secondRow);
 		return new SimpleKeyboard(rows);
 	}
@@ -73,5 +74,27 @@ public class Keyboard {
 		List<String> thirdRow = List.of("Вернуться в меню");
 		List<List<String>> rows = List.of(firstRow, secondRow, thirdRow);
 		return new SimpleKeyboard(rows);
+	}
+
+	public static InlineKeyboard getChooseTestKeyboard(List<Boolean> completedTests) {
+		List<InlineButtonInfo> tests = new ArrayList<>();
+		for (int i = 0; i < completedTests.size(); i++) {
+			String testNumber = Integer.toString(i + 1);
+			if (completedTests.get(i)) {
+				tests.add(new InlineButtonInfo(testNumber + " ✅", testNumber));
+			} else {
+				tests.add(new InlineButtonInfo(testNumber, testNumber));
+			}
+		}
+		List<List<InlineButtonInfo>> rows = List.of(tests);
+		return new InlineKeyboard(rows);
+	}
+
+	public static InlineKeyboard getVariantsQuestionKeyboard(List<String> variants) {
+		List<List<InlineButtonInfo>> rows = new ArrayList<>();
+		for (String variant : variants) {
+			rows.add(List.of(new InlineButtonInfo(variant, variant)));
+		}
+		return new InlineKeyboard(rows);
 	}
 }
