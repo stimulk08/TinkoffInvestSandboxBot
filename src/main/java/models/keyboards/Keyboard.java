@@ -91,6 +91,7 @@ public class Keyboard {
 				row = new ArrayList<>();
 			}
 		}
+		if(row.size() != 0) rows.add(row);
 		return new SimpleKeyboard(rows);
 	}
 
