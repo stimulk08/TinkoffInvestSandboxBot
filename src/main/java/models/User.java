@@ -14,13 +14,12 @@ public class User {
 	private long lastQueryTime;
 	private WrappedApi api;
 	private BigDecimal startUSDAmount = new BigDecimal(0);
-	private List<Boolean> completedTests;
+	private final List<Boolean> completedTests;
 
 	public User(long chatId) {
 		this.chatId = chatId;
 		this.state = State.NONE;
-		this.completedTests = new ArrayList<>();
-		// this.completedTests =
+		this.completedTests = GoogleDocks.getUserCompletedTests(chatId);
 		setLastQueryTime();
 	}
 
@@ -60,5 +59,11 @@ public class User {
 		return startUSDAmount;
 	}
 
-	public List<Boolean> getCompletedTests() { return completedTests; }
+	public List<Boolean> getCompletedTests() {
+		return completedTests;
+	}
+
+	public void setCompletedTest(Integer testNumber) {
+		completedTests.set(testNumber - 1, true);
+	}
 }

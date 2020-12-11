@@ -76,18 +76,22 @@ public class Keyboard {
 		return new SimpleKeyboard(rows);
 	}
 
-	public static InlineKeyboard getChooseTestKeyboard(List<Boolean> completedTests) {
-		List<InlineButtonInfo> tests = new ArrayList<>();
+	public static SimpleKeyboard getChooseTestKeyboard(List<Boolean> completedTests) {
+		List<List<String>> rows = new ArrayList<>();
+		List<String> row = new ArrayList<>();
 		for (int i = 0; i < completedTests.size(); i++) {
 			String testNumber = Integer.toString(i + 1);
 			if (completedTests.get(i)) {
-				tests.add(new InlineButtonInfo(testNumber + " ✅", testNumber));
+				row.add(testNumber + " ✅");
 			} else {
-				tests.add(new InlineButtonInfo(testNumber, testNumber));
+				row.add(testNumber);
+			}
+			if (row.size() == 3) {
+				rows.add(row);
+				row = new ArrayList<>();
 			}
 		}
-		List<List<InlineButtonInfo>> rows = List.of(tests);
-		return new InlineKeyboard(rows);
+		return new SimpleKeyboard(rows);
 	}
 
 	public static InlineKeyboard getVariantsQuestionKeyboard(List<String> variants) {
@@ -96,5 +100,20 @@ public class Keyboard {
 			rows.add(List.of(new InlineButtonInfo(variant, variant)));
 		}
 		return new InlineKeyboard(rows);
+	}
+
+	public static SimpleKeyboard getEndQuizKeyboard(boolean needRetake) {
+		List<List<String>> rows = new ArrayList<>();
+		rows.add(List.of("✅Завершить тест✅"));
+		if (needRetake) {
+			rows.add(List.of("✏Прорешать неверно отвеченные вопросы✏"));
+		}
+		return new SimpleKeyboard(rows);
+	}
+
+	public static SimpleKeyboard getReadyRetakeQuizKeyboard() {
+		List<List<String>> rows = new ArrayList<>();
+		rows.add(List.of("Готов"));
+		return new SimpleKeyboard(rows);
 	}
 }
