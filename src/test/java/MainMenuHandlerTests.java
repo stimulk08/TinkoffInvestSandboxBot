@@ -39,4 +39,12 @@ public class MainMenuHandlerTests {
 		handler.handleMessage(user, update);
 		Assert.assertNotSame(stateBefore, user.getState());
 	}
+
+	@Test
+	public void handleChooseTests_ShouldChangeUserState() {
+		when(update.getMessageData()).thenReturn("✏Пройти тест✏");
+		State stateBefore = user.getState();
+		handler.handleMessage(user, update);
+		Assert.assertNotSame(stateBefore, user.getState());
+	}
 }
