@@ -28,7 +28,7 @@ public class SearchByTickerHandlerTest {
 
     @Before
     public void setUp() {
-        user = new User(0);
+        user = new User(0, "username");
         update = mock(WrappedUpdate.class);
         api = mock(WrappedApi.class);
         when(api.getInstrumentsByTicker(any())).thenReturn(Collections.emptyList());

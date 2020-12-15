@@ -16,7 +16,7 @@ public class ChooseSearchModeHandlerTest {
     @Before
     public void setUp(){
         update = mock(WrappedUpdate.class);
-        user = new User(0);
+        user = new User(0, "user");
     }
 
     @Test

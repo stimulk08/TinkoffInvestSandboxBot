@@ -1,0 +1,12 @@
+[2020-12-15 06:12:09.660] [WARNING] com.google.api.client.util.store.FileDataStoreFactory setPermissionsToOwnerOnly 
+unable to change permissions for everybody: C:\Users\artem\IdeaProjects\TinkoffInvestSandboxBot\tokens
+[2020-12-15 06:12:09.677] [WARNING] com.google.api.client.util.store.FileDataStoreFactory setPermissionsToOwnerOnly 
+unable to change permissions for owner: C:\Users\artem\IdeaProjects\TinkoffInvestSandboxBot\tokens
+[2020-12-15 06:34:06.138] [WARNING] com.google.api.client.util.store.FileDataStoreFactory setPermissionsToOwnerOnly 
+unable to change permissions for everybody: C:\Users\artem\IdeaProjects\TinkoffInvestSandboxBot\tokens
+[2020-12-15 06:34:06.140] [WARNING] com.google.api.client.util.store.FileDataStoreFactory setPermissionsToOwnerOnly 
+unable to change permissions for owner: C:\Users\artem\IdeaProjects\TinkoffInvestSandboxBot\tokens
+[2020-12-15 06:34:29.566] [WARNING] com.google.api.client.util.store.FileDataStoreFactory setPermissionsToOwnerOnly 
+unable to change permissions for everybody: C:\Users\artem\IdeaProjects\TinkoffInvestSandboxBot\tokens
+[2020-12-15 06:34:29.568] [WARNING] com.google.api.client.util.store.FileDataStoreFactory setPermissionsToOwnerOnly 
+unable to change permissions for owner: C:\Users\artem\IdeaProjects\TinkoffInvestSandboxBot\tokens

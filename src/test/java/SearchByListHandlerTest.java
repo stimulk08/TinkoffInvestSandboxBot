@@ -16,7 +16,7 @@ public class SearchByListHandlerTest {
     @Before
     public void setUp(){
         update = mock(WrappedUpdate.class);
-        user = new User(0);
+        user = new User(0, "username");
     }
     @Test
     public void test1() {

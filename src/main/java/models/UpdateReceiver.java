@@ -43,9 +43,10 @@ public class UpdateReceiver {
 
 	public List<Message> handle(WrappedUpdate update) {
 		long chatId = update.getChatId();
+		String username = update.getUsername();
 
 		if (!chatIdToUser.containsKey(chatId)) {
-			chatIdToUser.put(chatId, new User(chatId));
+			chatIdToUser.put(chatId, new User(chatId, username));
 		}
 		User user = chatIdToUser.get(chatId);
 

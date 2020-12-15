@@ -25,8 +25,7 @@ public class Bot extends TelegramLongPollingBot {
 				new SearchByListHandler(),
 				new ChoosePortfolioHandler(),
 				new QuizHandler(),
-				new QuizHandler(),
-				new QuizStatisticHandler());
+				new QuizHandler());
 		updateReceiver = new UpdateReceiver(handlers);
 	}
 

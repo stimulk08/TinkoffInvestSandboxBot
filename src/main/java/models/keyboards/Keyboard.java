@@ -13,7 +13,8 @@ public class Keyboard {
 				"❌Сбросить портфель❌");
 		List<String> secondRow = List.of("\uD83D\uDD0EНайти актив\uD83D\uDD0D",
 				"✏Пройти тест✏");
-		List<List<String>> rows = List.of(firstRow, secondRow);
+		List<String> thirdRow = List.of("\uD83D\uDCCAПосмотреть рейтинг пользователей\uD83D\uDCCA");
+		List<List<String>> rows = List.of(firstRow, secondRow, thirdRow);
 		return new SimpleKeyboard(rows);
 	}
 
@@ -92,6 +93,7 @@ public class Keyboard {
 			}
 		}
 		if(row.size() != 0) rows.add(row);
+		rows.add(List.of("Вернуться в меню"));
 		return new SimpleKeyboard(rows);
 	}
 

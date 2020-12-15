@@ -18,7 +18,7 @@ public class MainMenuHandlerTests {
 
 	@Before
 	public void setUp() {
-		user = new User(11);
+		user = new User(11,"username");
 		update = mock(WrappedUpdate.class);
 		handler = new MainMenuHandler();
 	}

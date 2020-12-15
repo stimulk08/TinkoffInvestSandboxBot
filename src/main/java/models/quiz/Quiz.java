@@ -2,6 +2,7 @@ package models.quiz;
 
 import models.GoogleDocks;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,10 @@ public class Quiz {
 		userAnswers.add(isRightAnswer);
 	}
 
+	public ArrayList<Question> getQuestions(){
+		return new ArrayList<>(questions);
+	}
+
 	public void goToNextQuestion() {
 		indexInRow++;
 	}
@@ -53,8 +58,8 @@ public class Quiz {
 		return questions.get(rowQuestions.get(indexInRow));
 	}
 
-	public void uploadQuizResult(Long chatId) {
-		GoogleDocks.uploadQuizResult(chatId, testNumber, userAnswers);
+	public void uploadQuizResult(String username) {
+		GoogleDocks.uploadQuizResult(username, testNumber, userAnswers);
 		hasQuizResultUploaded = true;
 	}
 
