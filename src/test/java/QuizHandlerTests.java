@@ -16,7 +16,7 @@ public class QuizHandlerTests {
 
 	@Before
 	public void setUp() {
-		user = new User(11);
+		user = new User(11, "username");
 		update = mock(WrappedUpdate.class);
 		handler = new QuizHandler();
 		when(update.getMessageData()).thenReturn("1");
