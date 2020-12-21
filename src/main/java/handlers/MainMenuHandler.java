@@ -108,7 +108,7 @@ public class MainMenuHandler implements Handler {
         user.setState(State.TAKING_QUIZ);
         WrappedSendMessage message = new WrappedSendMessage(
                 user.getChatId(),
-                "Выберите номера теста",
+                "Выберите номер теста",
                 Keyboard.getChooseTestKeyboard(user.getCompletedTests()));
         return List.of(message);
     }
