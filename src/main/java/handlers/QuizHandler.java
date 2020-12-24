@@ -101,7 +101,8 @@ public class QuizHandler implements Handler {
 
     private List<Message> handleToMenu(User user) {
         user.setState(State.MAIN_MENU);
-        return List.of(new WrappedSendMessage(user.getChatId(), "Хорошо", Keyboard.getMenuKeyboard()));
+        return List.of(new WrappedSendMessage(user.getChatId(), "Хорошо",
+                Keyboard.getMenuKeyboard()));
     }
 
     private List<Message> handleGetNextQuestion(User user) {
