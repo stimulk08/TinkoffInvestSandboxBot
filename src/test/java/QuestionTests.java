@@ -21,4 +21,11 @@ public class QuestionTests {
 		Assert.assertTrue(question.checkChosenVariant("2"));
 		Assert.assertFalse(question.checkChosenVariant("1"));
 	}
+
+	@Test
+	public void checkDeleteOneWrongVariant_shouldDelete() {
+		int sizeBefore = question.getVariants().size();
+		question.deleteOneWrongVariant();
+		Assert.assertNotSame(sizeBefore, question.getVariants().size());
+	}
 }
